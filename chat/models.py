@@ -1,8 +1,24 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from django.utils import timezone
 
 
-class Group(models.Model):
+class TimeStamped(models.Model):
+    class Meta:
+        abstract = True
+
+    created = models.DateTimeField()
+    updated = models.DateTimeField()
+
+    def save(self, *args, **kwargs) -> None:
+        _now = timezone.now()
+        self.updated = _now
+        if not self.id:
+            self.created = _now
+        return super(TimeStamped, self).save(*args, **kwargs)
+
+
+class Group(TimeStamped):
     name = models.CharField(max_length=100)
     members = models.ManyToManyField(
         User, related_name="chat_groups", through="GroupMembership"
@@ -12,7 +28,7 @@ class Group(models.Model):
         return self.name
 
 
-class Message(models.Model):
+class Message(TimeStamped):
     group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, null=True)
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="sent_messages"
@@ -34,11 +50,10 @@ class Message(models.Model):
         return self.content
 
 
-class GroupMembership(models.Model):
+class GroupMembership(TimeStamped):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     is_admin = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return (" -> ").join([self.user.first_name, self.group.name])
-
