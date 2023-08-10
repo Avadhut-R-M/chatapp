@@ -7,7 +7,8 @@ from rest_framework.response import Response
 
 from .filters import GroupFilterSet
 from .models import Group, GroupMembership, Message
-from .serializers import GroupDetailSerializer, GroupSerializer, MessageSerializer
+from .serializers import (GroupDetailSerializer, GroupSerializer,
+                          MessageSerializer)
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -105,4 +106,61 @@ class GroupViewSet(viewsets.ModelViewSet):
 
         GroupMembership.objects.create(group_id=group_id, user_id=member_id)
         return Response({"status": "added"}, status=status.HTTP_200_OK)
+
+
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "group_id",
+                openapi.IN_QUERY,
+                description="Group id",
+                type=openapi.TYPE_INTEGER,
+            ),
+            openapi.Parameter(
+                "receiver_id",
+                openapi.IN_QUERY,
+                description="Receiver id",
+                type=openapi.TYPE_INTEGER,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        group_id = request.query_params.get("group_id", None)
+        receiver_id = request.query_params.get("receiver_id", None)
+        sender_id = request.user.id
+
+        messages = Message.objects.none()
+        if group_id:
+            messages = Message.objects.filter(group_id=group_id).order_by("-id")
+        elif receiver_id and sender_id:
+            messages = Message.objects.filter(
+                sender_id__in=[receiver_id, sender_id],
+                receiver_id__in=[receiver_id, sender_id],
+            ).order_by("-id")
+
+        seralizer = self.get_serializer(messages, many=True)
+        return Response(seralizer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "receiver_id": openapi.Schema(type=openapi.TYPE_INTEGER),
+                "group_id": openapi.Schema(
+                    type=openapi.TYPE_INTEGER,
+                ),
+                "content": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                ),
+            },
+        )
+    )
+    def create(self, request, *args, **kwargs):
+        request.data['sender_id'] = request.user.id
+        return super().create(request, *args, **kwargs)
 

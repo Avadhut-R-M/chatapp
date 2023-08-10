@@ -7,8 +7,8 @@ class TimeStamped(models.Model):
     class Meta:
         abstract = True
 
-    created = models.DateTimeField()
-    updated = models.DateTimeField()
+    created = models.DateTimeField(default=timezone.now)
+    updated = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs) -> None:
         _now = timezone.now()
@@ -41,7 +41,6 @@ class Message(TimeStamped):
         related_name="received_messages",
     )
     content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         message_len = len(self.content)
