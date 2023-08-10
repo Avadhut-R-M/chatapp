@@ -153,8 +153,8 @@ class MessageViewSet(viewsets.ModelViewSet):
                 receiver_id__in=[receiver_id, sender_id],
             ).order_by("-id")
 
-        seralizer = self.get_serializer(messages, many=True)
-        return Response(seralizer.data, status=status.HTTP_200_OK)
+        serializer = self.get_serializer(messages, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
         request_body=openapi.Schema(
@@ -171,8 +171,19 @@ class MessageViewSet(viewsets.ModelViewSet):
         )
     )
     def create(self, request, *args, **kwargs):
-        request.data["sender_id"] = request.user.id
-        return super().create(request, *args, **kwargs)
+        data = request.data.copy()
+        data["sender_id"] = request.user.id
+        if (not "receiver_id" in data) and (not "group_id" in data):
+            return Response(
+                    {"error": "receiver_id or group_id is mandatory"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(viewsets.ModelViewSet):

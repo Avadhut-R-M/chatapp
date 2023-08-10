@@ -4,88 +4,86 @@ from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from chat.models import Group
+from chat.models import Group, Message
 
 
 @pytest.mark.django_db
-class TestCreateGroup:
+class TestCreateMessage:
     def test_if_user_is_anonymus_return_403(self):
         client = APIClient()
-        response = client.post("/api/group/", {"name": "test", "members": [1, 2]})
+        response = client.post("/api/message/", {"group_id": "1", "content": "test"})
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_if_data_is_invalid_return_400(self):
         client = APIClient()
-        client.force_authenticate(user=User())
-        response = client.post("/api/group/", {"name": "test"})
+        user = baker.make(User)
+        client.force_authenticate(user=User(user.id))
+        response = client.post("/api/message/", {"content": "test"})
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_if_data_is_invalid_2_return_400(self):
-        client = APIClient()
-        client.force_authenticate(user=User())
-        response1 = client.post("/api/group/", {"name": "test", "members": "[1,2]"})
-        response2 = client.post("/api/group/", {"name": "test", "members": "[1,2]"})
-
-        assert response1.status_code == status.HTTP_201_CREATED
-        assert response2.status_code == status.HTTP_400_BAD_REQUEST
-
     def test_if_data_is_valid_return_200(self):
         client = APIClient()
-        client.force_authenticate(user=User())
-        response = client.post("/api/group/", {"name": "test", "members": "[1,2]"})
+        user = baker.make(User)
+        client.force_authenticate(user=User(user.id))
+        response = client.post("/api/message/", {"receiver_id": "1", "content": "test"})
+        print(response)
 
         assert response.status_code == status.HTTP_201_CREATED
 
 
 @pytest.mark.django_db
-class TestListGroup:
+class TestListMessage:
     def test_if_user_is_anonymus_return_403(self):
         client = APIClient()
-        response = client.get("/api/group/")
+        response = client.get("/api/message/")
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_if_data_is_valid_return_200(self):
         client = APIClient()
         client.force_authenticate(user=User(id=1))
-        response = client.get("/api/group/")
+        response = client.get("/api/message/")
 
         assert response.status_code == status.HTTP_200_OK
 
 
 @pytest.mark.django_db
-class TestDeleteGroup:
+class TestDeleteMessage:
     def test_if_user_is_anonymus_return_403(self):
-        group = baker.make(Group)
+        message = baker.make(Message)
         client = APIClient()
-        response = client.delete("/api/group/{}/".format(group.id))
+        response = client.delete("/api/message/{}/".format(message.id))
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_if_data_is_valid_return_204(self):
-        group = baker.make(Group)
+        message = baker.make(Message)
         client = APIClient()
         client.force_authenticate(user=User(id=1))
-        response = client.delete("/api/group/{}/".format(group.id))
+        response = client.delete("/api/message/{}/".format(message.id))
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
 @pytest.mark.django_db
-class TestUpdateGroup:
+class TestUpdateMessage:
     def test_if_user_is_anonymus_return_403(self):
-        group = baker.make(Group)
+        message = baker.make(Message)
         client = APIClient()
-        response = client.patch("/api/group/{}/".format(group.id), {"name": "test2"})
+        response = client.patch(
+            "/api/message/{}/".format(message.id), {"content": "test2"}
+        )
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_if_data_is_valid_return_204(self):
-        group = baker.make(Group)
+        message = baker.make(Message)
         client = APIClient()
         client.force_authenticate(user=User(id=1))
-        response = client.patch("/api/group/{}/".format(group.id), {"name": "test"})
+        response = client.patch(
+            "/api/message/{}/".format(message.id), {"content": "test"}
+        )
 
         assert response.status_code == status.HTTP_200_OK
