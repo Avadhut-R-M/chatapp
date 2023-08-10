@@ -5,14 +5,16 @@ from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from .filters import GroupFilterSet
 from .models import Group, GroupMembership, Message
-from .serializers import GroupDetailSerializer, GroupSerializer
+from .serializers import GroupDetailSerializer, GroupSerializer, MessageSerializer
 
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filterset_class = GroupFilterSet
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -20,9 +22,20 @@ class GroupViewSet(viewsets.ModelViewSet):
         else:
             return GroupSerializer
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "name",
+                openapi.IN_QUERY,
+                description="Name of group",
+                type=openapi.TYPE_STRING,
+            ),
+        ]
+    )
     def list(self, request, *args, **kwargs):
         user = request.user
         groups = user.chat_groups.all()
+        groups = self.filterset_class(request.query_params, groups).qs
         serialzers = self.get_serializer(groups, many=True)
         return Response(serialzers.data, status=status.HTTP_200_OK)
 
