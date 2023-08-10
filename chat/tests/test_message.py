@@ -4,7 +4,7 @@ from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from chat.models import Group, Message
+from chat.models import Message
 
 
 @pytest.mark.django_db
@@ -28,7 +28,6 @@ class TestCreateMessage:
         user = baker.make(User)
         client.force_authenticate(user=User(user.id))
         response = client.post("/api/message/", {"receiver_id": "1", "content": "test"})
-        print(response)
 
         assert response.status_code == status.HTTP_201_CREATED
 
