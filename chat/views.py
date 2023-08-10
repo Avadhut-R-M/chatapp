@@ -17,6 +17,7 @@ from .serializers import (
 )
 
 
+
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
@@ -62,6 +63,8 @@ class GroupViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         members = request.data.get("members", "[]")
         name = request.data.get("name", "")
+
+        members = eval(members)
 
         if request.user:
             members.append(request.user.id)
