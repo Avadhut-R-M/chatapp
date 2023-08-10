@@ -1,20 +1,27 @@
 from django.contrib.auth.models import User
+from django_filters import rest_framework as django_filters
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .filters import GroupFilterSet
+from .filters import GroupFilterSet, UserFilterSet
 from .models import Group, GroupMembership, Message
-from .serializers import (GroupDetailSerializer, GroupSerializer,
-                          MessageSerializer)
+from .permission import IsAdminUser
+from .serializers import (
+    GroupDetailSerializer,
+    GroupSerializer,
+    MessageSerializer,
+    UserSerializer,
+)
 
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [django_filters.DjangoFilterBackend]
     filterset_class = GroupFilterSet
 
     def get_serializer_class(self):
@@ -36,7 +43,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = request.user
         groups = user.chat_groups.all()
-        groups = self.filterset_class(request.query_params, groups).qs
+        groups = self.filter_queryset(groups)
         serialzers = self.get_serializer(groups, many=True)
         return Response(serialzers.data, status=status.HTTP_200_OK)
 
@@ -161,6 +168,33 @@ class MessageViewSet(viewsets.ModelViewSet):
         )
     )
     def create(self, request, *args, **kwargs):
-        request.data['sender_id'] = request.user.id
+        request.data["sender_id"] = request.user.id
         return super().create(request, *args, **kwargs)
 
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [django_filters.DjangoFilterBackend]
+    filterset_class = UserFilterSet
+
+    def get_permissions(self):
+        if self.action == "list":
+            permission_classes = [permissions.IsAuthenticated]
+        else:
+            permission_classes = [permissions.IsAuthenticated, IsAdminUser]
+        return [permission() for permission in permission_classes]
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "name",
+                openapi.IN_QUERY,
+                description="Name of user",
+                type=openapi.TYPE_STRING,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
