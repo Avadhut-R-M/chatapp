@@ -11,3 +11,88 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.App{
+  background-color: #242c5b;
+  /* height: 100vh; */
+}
+
+.group-listing{
+  /* background-color: #0f1855; */
+  border-bottom: 1px solid gray;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: left;
+  padding-left: 10px;
+  cursor: pointer;
+  color: white;
+}
+
+.group-listing-selected{
+  background-color: #40476a;
+}
+
+.group-listing-main{
+  border-right: 1px solid gray;
+  padding-right: 0px !important;
+  height: 93vh;
+}
+
+.group-listing-container{
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+.message-input{
+  width: 100%;
+  padding-top: 2px;
+  border: none;
+  min-height: 3em;
+  max-height: 6em;
+  padding-left: 10px;
+  outline: none;
+  border-radius: 10px;
+}
+
+.message-listing-main{
+  padding-left: 20px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 93vh;
+  /* max-height: 90vh; */
+}
+
+.message-listing{
+  color: white;
+  text-align: left;
+}
+
+.message-lising-content{
+  padding-left: 20px;
+  padding-bottom: 15px;
+}
+
+::-webkit-scrollbar{
+  background-color: #242c5b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #40476a;
+}
+
+.message-input-grp{
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  column-gap: 10px;
+}
+
+.message-send{
+  height: 2em;
+}
+
+.message-listing-main-container{
+  overflow: scroll;
+}

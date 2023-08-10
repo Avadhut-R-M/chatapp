@@ -1,8 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-// import monitorReducerEnhancer from './enhancers/moniterReducer'
 import thunk from 'redux-thunk'
+import { GroupReducer } from '../reducers/GroupReducer';
+import { MessageReducer } from '../reducers/MessageReducer';
 
 const rootReducer = {
+    'group': GroupReducer,
+    'message': MessageReducer
 }
 
 
