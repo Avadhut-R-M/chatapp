@@ -7,7 +7,8 @@ const CHANGE_SELECTED_GROUP_ID = "CHANGE_SELECTED_GROUP_ID"
 const initialData = {
     list: [],
     create_new_group: false,
-    selected_group_id: null
+    selected_group_id: null,
+    selected_group_name: ''
 };
 
 const GroupReducer = (state = initialData, action) => {
@@ -27,7 +28,7 @@ const GroupReducer = (state = initialData, action) => {
             return { ...state, list: new_list };
 
         case CHANGE_SELECTED_GROUP_ID:
-            return {...state, selected_group_id: action.payload}
+            return {...state, selected_group_id: action?.payload?.id, selected_group_name: action?.payload?.name}
 
         default:
             return state;

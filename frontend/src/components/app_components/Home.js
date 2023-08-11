@@ -5,6 +5,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { get_groups, set_selected_group } from "../../actions/group-actions";
+import MessageListinge from "./MessageListinge";
+import { get_messages } from "../../actions/message-action";
 
 class Home extends React.Component {
     constructor(props) {
@@ -12,9 +14,18 @@ class Home extends React.Component {
         this.state = {};
     }
 
-    componentDidMount(){
-        this.props.get_groups()
+    componentDidMount() {
+        this.props.get_groups();
     }
+
+    onGroupSelection = (group) => {
+        this.props.set_selected_group(
+            group.id,
+            group.name
+        )
+        this.props.get_messages(group.id)
+    }
+
     render() {
         return (
             <div>
@@ -28,35 +39,16 @@ class Home extends React.Component {
                                             ? "group-listing-selected"
                                             : ""
                                     }`}
-                                    onClick={()=> this.props.set_selected_group(group.id)}
-                                    key = {group.id}
+                                    onClick={() =>
+                                        this.onGroupSelection(group)
+                                    }
+                                    key={group.id}
                                 >
                                     {group.name}
                                 </div>
                             ))}
                         </Col>
-                        <Col xs={8} className="message-listing-main">
-                            <div className="message-listing-main-container">
-                                {this.props.messages.map((message) => (
-                                    <div className={`message-listing ${""}`} key={message.id}>
-                                        <div className="message-lising-sender">
-                                            {message.sender} -
-                                        </div>
-                                        <div className="message-lising-content">
-                                            {message.content}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="message-input-grp">
-                                <textarea
-                                    className="message-input"
-                                    placeholder="Add new message here"
-                                    rows={4}
-                                ></textarea>
-                                <Button className="message-send" variant="primary">Send</Button>
-                            </div>
-                        </Col>
+                        <MessageListinge/>
                     </Row>
                 </Container>
             </div>
@@ -67,7 +59,9 @@ class Home extends React.Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         get_groups: () => dispatch(get_groups()),
-        set_selected_group: (id) => dispatch(set_selected_group(id))
+        set_selected_group: (id, name) =>
+            dispatch(set_selected_group(id, name)),
+        get_messages: (group_id) => dispatch(get_messages(group_id))
     };
 };
 
@@ -75,7 +69,8 @@ const mapStateToProps = (state) => {
     return {
         groups: state.group.list,
         messages: state.message.list,
-        selected_group_id: state.group.selected_group_id
+        selected_group_id: state.group.selected_group_id,
+        selected_group_name: state.group.selected_group_name,
     };
 };
 

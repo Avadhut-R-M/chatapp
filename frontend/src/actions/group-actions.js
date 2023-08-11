@@ -20,7 +20,7 @@ export const get_groups = () => {
             headers
         }
 
-        let url = 'http://127.0.0.1:8000/api/group'
+        let url = 'http://127.0.0.1:8000/api/group/'
 
         dispatch({
             type: 'API',
@@ -40,11 +40,11 @@ const SuccessGetUser = (data) => {
     }
 }
 
-export const set_selected_group = (id=null) => {
+export const set_selected_group = (id=null, name='') => {
     return (dispatch, getstate) =>{
         dispatch({
             type: CHANGE_SELECTED_GROUP_ID,
-            payload: id
+            payload: {'id':id, 'name':name}
         })
     }
 }
