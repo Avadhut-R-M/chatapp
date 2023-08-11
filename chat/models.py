@@ -41,6 +41,9 @@ class Message(TimeStamped):
         related_name="received_messages",
     )
     content = models.TextField()
+    likes = models.ManyToManyField(
+        User, related_name="messages", through="MessageLike"
+    )
 
     def __str__(self) -> str:
         message_len = len(self.content)
@@ -56,3 +59,9 @@ class GroupMembership(TimeStamped):
 
     def __str__(self) -> str:
         return (" -> ").join([self.user.first_name, self.group.name])
+
+
+class MessageLike(TimeStamped):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_liked = models.BooleanField(default=True)

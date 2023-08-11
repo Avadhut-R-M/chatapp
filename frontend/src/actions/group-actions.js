@@ -7,7 +7,7 @@ import {
 } from "../reducers/GroupReducer";
 
 
-export const get_groups = () => {
+export const get_groups = (name='') => {
     return (dispatch, getState) => {
         let state = getState()
         let headers = new Headers({
@@ -20,7 +20,7 @@ export const get_groups = () => {
             headers
         }
 
-        let url = 'http://127.0.0.1:8000/api/group/'
+        let url = `http://127.0.0.1:8000/api/group/?name=${name}`
 
         dispatch({
             type: 'API',

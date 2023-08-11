@@ -2,6 +2,8 @@ import {
     ADD_INITIAL_MESSAGE_DATA,
     ADD_MESSAGE_DATA,
     ADD_NEW_MESSAGE,
+    ADD_LIKE,
+    RESET_SCROLL
 } from "../reducers/MessageReducer";
 
 
@@ -58,7 +60,7 @@ export const send_messages = (data) => {
             type: 'API',
             options: options,
             url: url,
-            successAction: SuccessSendMessage
+            successAction: SuccessSendMessage,
         })
     }
 }
@@ -68,6 +70,93 @@ const SuccessSendMessage = (data) => {
         dispatch({
             type: ADD_NEW_MESSAGE,
             payload: data || []
+        })
+    }
+}
+
+export const like_messages = (id, is_liked=true) => {
+    return (dispatch, getState) => {
+        let state = getState()
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        })
+        headers.append('Authorization', `Token ${state?.auth?.token}`)
+
+        let options = {
+            method : 'GET',
+            headers,
+        }
+
+        let url = `http://127.0.0.1:8000/api/message/${id}/like/?is_liked=${is_liked}`
+
+        dispatch({
+            type: 'API',
+            options: options,
+            url: url,
+            successAction: SuccessLikeMessage,
+            extraParams: {'id': id, 'is_liked': is_liked}
+        })
+    }
+}
+
+const SuccessLikeMessage = (data, extraParams) => {
+    return (dispatch, getstate) =>{
+        let state = getstate()
+        let messages = state.message.list
+        messages = messages.map((message) => {
+            if(message.id == extraParams?.id){
+                message.is_liked = extraParams?.is_liked
+            }
+            return message
+        })
+        dispatch({
+            type: ADD_LIKE,
+            payload: messages || []
+        })
+    }
+}
+
+export const reset_scroll = () => {
+    return (dispatch, getstate) =>{
+        dispatch({
+            type: RESET_SCROLL,
+        })
+    }
+}
+
+export const delete_messages = (id) => {
+    return (dispatch, getState) => {
+        let state = getState()
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        })
+        headers.append('Authorization', `Token ${state?.auth?.token}`)
+
+        let options = {
+            method : 'DELETE',
+            headers,
+        }
+
+        let url = `http://127.0.0.1:8000/api/message/${id}/`
+
+        dispatch({
+            type: 'API',
+            options: options,
+            url: url,
+            successAction: SuccessDeleteMessage,
+            extraParams: {'id': id}
+        })
+    }
+}
+
+const SuccessDeleteMessage = (data, extraParams) => {
+    return (dispatch, getstate) =>{
+        let state = getstate()
+        let messages = state.message.list
+        messages = messages.filter((message) => message.id != extraParams?.id)
+        dispatch({
+            type: ADD_LIKE,
+            payload: messages || []
         })
     }
 }

@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import { get_groups, set_selected_group } from "../../actions/group-actions";
 import MessageListinge from "./MessageListinge";
 import { get_messages } from "../../actions/message-action";
+import Form from "react-bootstrap/Form";
 
 class Home extends React.Component {
     constructor(props) {
@@ -19,11 +19,13 @@ class Home extends React.Component {
     }
 
     onGroupSelection = (group) => {
-        this.props.set_selected_group(
-            group.id,
-            group.name
-        )
-        this.props.get_messages(group.id)
+        this.props.set_selected_group(group.id, group.name);
+        this.props.get_messages(group.id);
+    };
+
+    formValueChange = (event) => {
+        let fleldVal = event.target.value;
+        this.props.get_groups(fleldVal);
     }
 
     render() {
@@ -32,6 +34,14 @@ class Home extends React.Component {
                 <Container className="group-listing-container">
                     <Row>
                         <Col className="group-listing-main">
+                            <Form inline className="group-search">
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Search"
+                                    className=" mr-sm-2"
+                                    onChange={this.formValueChange}
+                                />
+                            </Form>
                             {this.props.groups.map((group) => (
                                 <div
                                     className={`group-listing ${
@@ -39,16 +49,14 @@ class Home extends React.Component {
                                             ? "group-listing-selected"
                                             : ""
                                     }`}
-                                    onClick={() =>
-                                        this.onGroupSelection(group)
-                                    }
+                                    onClick={() => this.onGroupSelection(group)}
                                     key={group.id}
                                 >
                                     {group.name}
                                 </div>
                             ))}
                         </Col>
-                        <MessageListinge/>
+                        <MessageListinge />
                     </Row>
                 </Container>
             </div>
@@ -58,10 +66,10 @@ class Home extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        get_groups: () => dispatch(get_groups()),
+        get_groups: (name) => dispatch(get_groups(name)),
         set_selected_group: (id, name) =>
             dispatch(set_selected_group(id, name)),
-        get_messages: (group_id) => dispatch(get_messages(group_id))
+        get_messages: (group_id) => dispatch(get_messages(group_id)),
     };
 };
 

@@ -19,14 +19,14 @@ const actionHandler = store => next => action => {
         if(resp.ok){
           resp.json().then(data => {
             if ('successAction' in action)
-              store.dispatch(action.successAction(data))
+              store.dispatch(action.successAction(data, action.extraParams))
           })
         }
 
         else{
           resp.json().then(data => {
             if ('failureAction' in action)
-              store.dispatch(action.failureAction(data))
+              store.dispatch(action.failureAction(data, action.extraParams))
           })
         }
       })

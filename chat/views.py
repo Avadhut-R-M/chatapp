@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .filters import GroupFilterSet, UserFilterSet
-from .models import Group, GroupMembership, Message
+from .models import Group, GroupMembership, Message, MessageLike
 from .permission import IsAdminUser
 from .serializers import (
     GroupDetailSerializer,
@@ -21,7 +21,7 @@ from .serializers import (
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     filter_backends = [django_filters.DjangoFilterBackend]
     filterset_class = GroupFilterSet
 
@@ -43,6 +43,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         user = request.user
+        user = User.objects.first()
         groups = user.chat_groups.all()
         groups = self.filter_queryset(groups)
         serialzers = self.get_serializer(groups, many=True)
@@ -121,7 +122,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     @swagger_auto_schema(
         manual_parameters=[
@@ -142,7 +143,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         group_id = request.query_params.get("group_id", None)
         receiver_id = request.query_params.get("receiver_id", None)
-        sender_id = request.user.id
+        sender_id = request.user.id or 1
 
         messages = Message.objects.none()
         if group_id:
@@ -153,7 +154,7 @@ class MessageViewSet(viewsets.ModelViewSet):
                 receiver_id__in=[receiver_id, sender_id],
             ).order_by("-id")
 
-        serializer = self.get_serializer(messages, many=True)
+        serializer = self.get_serializer(messages, many=True, context={'user_id': sender_id})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -172,7 +173,8 @@ class MessageViewSet(viewsets.ModelViewSet):
     )
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
-        data["sender_id"] = request.user.id
+        # data["sender_id"] = request.user.id
+        data["sender_id"] = 1
         if (not "receiver_id" in data) and (not "group_id" in data):
             return Response(
                     {"error": "receiver_id or group_id is mandatory"},
@@ -184,6 +186,42 @@ class MessageViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    @action(detail=True, methods=["GET"], name="like")
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "is_liked",
+                openapi.IN_QUERY,
+                description="Liked or not",
+                type=openapi.TYPE_BOOLEAN,
+            )
+        ]
+    )
+    def like(self, request, pk, *args, **kwargs):
+        """
+        Add new member in the existing group
+        """
+        message_id = pk
+        user_id = request.user.id or 1
+        is_liked = request.query_params.get('is_liked', True)
+
+        if (
+            not Message.objects.filter(id=message_id).exists()
+            or not User.objects.filter(id=user_id).exists()
+        ):
+            return Response(
+                {"error": "Group or user not available"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        like = MessageLike.objects.filter(message_id=message_id, user_id=user_id).last()
+        if like:
+            like.is_liked = False if is_liked == 'false' else True
+            like.save()
+        else:
+            MessageLike.objects.create(message_id=message_id, user_id=user_id)
+        return Response({"status": "added"}, status=status.HTTP_200_OK)
 
 
 class UserViewSet(viewsets.ModelViewSet):
