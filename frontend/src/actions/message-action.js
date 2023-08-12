@@ -5,6 +5,7 @@ import {
   RESET_SCROLL,
 } from "../reducers/MessageReducer";
 import { toast } from "react-toastify";
+import { message_api } from "./api-endpoint";
 
 export const get_messages = (group_id) => {
   return (dispatch, getState) => {
@@ -17,7 +18,7 @@ export const get_messages = (group_id) => {
       headers,
     };
 
-    let url = `http://127.0.0.1:8000/api/message/?group_id=${group_id}`;
+    let url = `${message_api}/?group_id=${group_id}`;
 
     dispatch({
       type: "API",
@@ -49,7 +50,7 @@ export const send_messages = (data) => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/message/`;
+    let url = `${message_api}/`;
 
     dispatch({
       type: "API",
@@ -80,7 +81,7 @@ export const like_messages = (id, is_liked = true) => {
       headers,
     };
 
-    let url = `http://127.0.0.1:8000/api/message/${id}/like/?is_liked=${is_liked}`;
+    let url = `${message_api}/${id}/like/?is_liked=${is_liked}`;
 
     dispatch({
       type: "API",
@@ -129,7 +130,7 @@ export const delete_messages = (id) => {
       headers,
     };
 
-    let url = `http://127.0.0.1:8000/api/message/${id}/`;
+    let url = `${message_api}/${id}/`;
 
     dispatch({
       type: "API",
@@ -167,7 +168,7 @@ export const edit_messages = (id, data) => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/message/${id}/`;
+    let url = `${message_api}/${id}/`;
 
     dispatch({
       type: "API",

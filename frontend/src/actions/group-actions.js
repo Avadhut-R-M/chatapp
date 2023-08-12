@@ -7,6 +7,7 @@ import {
   MEMBER_ADDITION,
 } from "../reducers/GroupReducer";
 import { toast } from "react-toastify";
+import { group_api } from "./api-endpoint";
 
 export const get_groups = (name = "") => {
   return (dispatch, getState) => {
@@ -20,7 +21,7 @@ export const get_groups = (name = "") => {
       headers,
     };
 
-    let url = `http://127.0.0.1:8000/api/group/?name=${name}`;
+    let url = `${group_api}/?name=${name}`;
 
     dispatch({
       type: "API",
@@ -80,7 +81,7 @@ export const create_group = (data) => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/group/`;
+    let url = `${group_api}/`;
 
     dispatch({
       type: "API",
@@ -125,7 +126,7 @@ export const edit_group = (id, data) => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/group/${id}/`;
+    let url = `${group_api}/${id}/`;
 
     dispatch({
       type: "API",
@@ -167,7 +168,7 @@ export const get_group_info = (id) => {
       headers,
     };
 
-    let url = `http://127.0.0.1:8000/api/group/${id}/`;
+    let url = `${group_api}/${id}/`;
 
     dispatch({
       type: "API",
@@ -191,7 +192,7 @@ export const delete_group = (id) => {
       headers,
     };
 
-    let url = `http://127.0.0.1:8000/api/group/${id}/`;
+    let url = `${group_api}/${id}/`;
 
     dispatch({
       type: "API",
@@ -247,7 +248,7 @@ export const add_group_member = (id, data) => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/group/${id}/add_member/`;
+    let url = `${group_api}/${id}/add_member/`;
 
     dispatch({
       type: "API",
@@ -278,7 +279,7 @@ export const remove_group_member = (id, data) => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/group/${id}/remove_member/`;
+    let url = `${group_api}/${id}/remove_member/`;
 
     dispatch({
       type: "API",

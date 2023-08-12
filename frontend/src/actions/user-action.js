@@ -10,6 +10,7 @@ import {
   LOGOUT,
   LOGIN,
 } from "../reducers/UserReducer";
+import { user_api } from "./api-endpoint";
 
 export const create_user = (data) => {
   return (dispatch, getState) => {
@@ -23,7 +24,7 @@ export const create_user = (data) => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/user/`;
+    let url = `${user_api}/`;
 
     dispatch({
       type: "API",
@@ -64,7 +65,7 @@ export const get_users = (name = "") => {
       headers,
     };
 
-    let url = `http://127.0.0.1:8000/api/user/?name=${name}`;
+    let url = `${user_api}/?name=${name}`;
 
     dispatch({
       type: "API",
@@ -111,7 +112,7 @@ export const delete_users = (id = "") => {
       headers,
     };
 
-    let url = `http://127.0.0.1:8000/api/user/${id}/`;
+    let url = `${user_api}/${id}/`;
 
     dispatch({
       type: "API",
@@ -165,7 +166,7 @@ export const edit_user = (id, data) => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/user/${id}/`;
+    let url = `${user_api}/${id}/`;
 
     dispatch({
       type: "API",
@@ -288,7 +289,7 @@ export const get_current_user = () => {
       headers,
     };
 
-    let url = `http://127.0.0.1:8000/api/user/current_user`;
+    let url = `${user_api}/current_user`;
 
     dispatch({
       type: "API",
