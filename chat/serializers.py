@@ -65,10 +65,11 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    is_admin = serializers.CharField(read_only=True, source='is_staff')
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "email", "username", "password")
+        fields = ("id", "first_name", "last_name", "email", "username", "password", "is_admin")
 
     def create(self, validated_data):
         user = User.objects.create_user(

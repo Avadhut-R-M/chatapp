@@ -36,11 +36,19 @@ code {
   border-right: 1px solid gray;
   padding-right: 0px !important;
   height: 93vh;
+  /* background-color: #242c5b; */
 }
 
 .group-listing-container{
   margin-left: 0px !important;
   margin-right: 0px !important;
+  background-color: #242c5b;
+}
+
+
+.user-container{
+  height: 92vh;
+  padding-top: 1em;
 }
 
 .message-input{
@@ -60,6 +68,15 @@ code {
   flex-direction: column;
   justify-content: space-between;
   height: 93vh;
+  /* max-height: 90vh; */
+}
+
+.group-info-main{
+  padding-left: 20px !important;
+  display: flex;
+  flex-direction: column;
+  height: 93vh;
+  row-gap: 2em;
   /* max-height: 90vh; */
 }
 
@@ -101,6 +118,7 @@ code {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .message-listing-messages{
@@ -182,4 +200,90 @@ code {
   display: flex;
   column-gap: 10px;
   font-size: 0.7em;
+}
+
+.group-members-title{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid white;
+  padding-bottom: 10px;
+}
+
+.group-members-title-span{
+  color: white;
+}
+
+.group-members{
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.group-members-main{
+  overflow: scroll;
+  height: 50vh;
+  margin-top: 10px;
+}
+.group-info-container{
+  display: flex;
+  column-gap: 1em;
+}
+
+.message-listing-groupname{
+  width: 100%;
+}
+
+.group-listing-all{
+  overflow: scroll;
+  height: 85vh;
+}
+
+.user-listing{
+  display: flex;
+  color: white;
+  justify-content: space-between;
+  margin-left: 2em;
+  margin-bottom: 1em;
+}
+
+.user-listing-buttons{
+  display: flex;
+  column-gap: 2em;
+}
+
+.user-search{
+  margin-bottom: 1em;
+}
+
+.Auth-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90vw;
+  height: 90vh;
+}
+
+.Auth-form {
+  width: 420px;
+  box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.Auth-form-content {
+  padding-left: 12%;
+  padding-right: 12%;
+}
+
+.Auth-form-title {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 24px;
+  color: rgb(34, 34, 34);
+  font-weight: 800;
 }

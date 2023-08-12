@@ -14,7 +14,7 @@ function EditMessage(props) {
                     placeholder="Add new message here"
                     rows={4}
                     onChange={(e) =>
-                        this.changeValue({ message: e.target.value })
+                        props.changeValue({ edited_message: e.target.value })
                     }
                     value={props.value}
                 ></textarea>

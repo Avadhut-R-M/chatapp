@@ -1,13 +1,13 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function DeleteMessage(props) {
+function DeleteUser(props) {
 
   return (
     <>
       <Modal show={props.show} onHide={props.onHide}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete</Modal.Title>
+          <Modal.Title>Remove</Modal.Title>
         </Modal.Header>
         <Modal.Body>Are you sure you want to delete</Modal.Body>
         <Modal.Footer>
@@ -15,7 +15,7 @@ function DeleteMessage(props) {
             Close
           </Button>
           <Button variant="primary" onClick={props.handleSave}>
-            Delete Record
+            Delete Member
           </Button>
         </Modal.Footer>
       </Modal>
@@ -23,4 +23,4 @@ function DeleteMessage(props) {
   );
 }
 
-export default DeleteMessage;
+export default DeleteUser;

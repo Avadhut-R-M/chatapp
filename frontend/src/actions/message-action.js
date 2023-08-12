@@ -5,6 +5,7 @@ import {
     ADD_LIKE,
     RESET_SCROLL
 } from "../reducers/MessageReducer";
+import { toast } from "react-toastify";
 
 
 export const get_messages = (group_id) => {
@@ -13,7 +14,7 @@ export const get_messages = (group_id) => {
         let headers = new Headers({
             'Content-Type': 'application/json'
         })
-        headers.append('Authorization', `Token ${state?.auth?.token}`)
+        
 
         let options = {
             method : 'GET',
@@ -46,7 +47,7 @@ export const send_messages = (data) => {
         let headers = new Headers({
             'Content-Type': 'application/json'
         })
-        headers.append('Authorization', `Token ${state?.auth?.token}`)
+        
 
         let options = {
             method : 'POST',
@@ -80,7 +81,7 @@ export const like_messages = (id, is_liked=true) => {
         let headers = new Headers({
             'Content-Type': 'application/json'
         })
-        headers.append('Authorization', `Token ${state?.auth?.token}`)
+        
 
         let options = {
             method : 'GET',
@@ -130,7 +131,7 @@ export const delete_messages = (id) => {
         let headers = new Headers({
             'Content-Type': 'application/json'
         })
-        headers.append('Authorization', `Token ${state?.auth?.token}`)
+        
 
         let options = {
             method : 'DELETE',
@@ -149,11 +150,55 @@ export const delete_messages = (id) => {
     }
 }
 
-const SuccessDeleteMessage = (data, extraParams) => {
+const SuccessDeleteMessage = (extraParams) => {
     return (dispatch, getstate) =>{
         let state = getstate()
         let messages = state.message.list
         messages = messages.filter((message) => message.id != extraParams?.id)
+        dispatch({
+            type: ADD_LIKE,
+            payload: messages || []
+        })
+        toast('deleted the message')
+    }
+}
+
+export const edit_messages = (id, data) => {
+    return (dispatch, getState) => {
+        let state = getState()
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        })
+        
+
+        let options = {
+            method : 'PATCH',
+            headers,
+            body: JSON.stringify(data)
+        }
+
+        let url = `http://127.0.0.1:8000/api/message/${id}/`
+
+        dispatch({
+            type: 'API',
+            options: options,
+            url: url,
+            successAction: SuccessEditMessage,
+            extraParams: {'id': id}
+        })
+    }
+}
+
+const SuccessEditMessage = (data, extraParams) => {
+    return (dispatch, getstate) =>{
+        let state = getstate()
+        let messages = state.message.list
+        messages = messages.map((message) => {
+            if(message.id == extraParams?.id){
+                message.content = data?.content
+            }
+            return message
+        })
         dispatch({
             type: ADD_LIKE,
             payload: messages || []

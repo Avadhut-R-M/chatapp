@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'drf_yasg',
     'corsheaders',
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
+    'authentication'
 ]
 
 MIDDLEWARE = [
@@ -130,3 +133,45 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}
+
+import datetime
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=10),  # Set your desired expiration time
+}
+from datetime import timedelta
+SIMPLE_JWT = {
+'ACCESS_TOKEN_LIFETIME': timedelta(seconds=10),
+'REFRESH_TOKEN_LIFETIME': timedelta(days=20),
+'ROTATE_REFRESH_TOKENS': False,
+'BLACKLIST_AFTER_ROTATION': True,
+
+'ALGORITHM': 'HS256',
+'SIGNING_KEY': '123',
+'VERIFYING_KEY': None,
+'AUDIENCE': None,
+'ISSUER': None,
+
+'AUTH_HEADER_TYPES': ('Bearer',),
+'USER_ID_FIELD': 'id',
+'USER_ID_CLAIM': 'user_id',
+
+'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+'TOKEN_TYPE_CLAIM': 'token_type',
+
+'JTI_CLAIM': 'jti',
+'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+'SLIDING_TOKEN_LIFETIME': timedelta(days=10),
+'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
+}

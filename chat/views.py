@@ -21,12 +21,12 @@ from .serializers import (
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [django_filters.DjangoFilterBackend]
     filterset_class = GroupFilterSet
 
     def get_serializer_class(self):
-        if self.action == "retrieve":
+        if self.action == "retrieve" or self.action == "partial_update":
             return GroupDetailSerializer
         else:
             return GroupSerializer
@@ -65,12 +65,10 @@ class GroupViewSet(viewsets.ModelViewSet):
         members = request.data.get("members", "[]")
         name = request.data.get("name", "")
 
-        members = eval(members)
-
         if request.user:
             members.append(request.user.id)
 
-        if name and len(members) > 2:
+        if name and len(members) > 1:
             if Group.objects.filter(name=name).exists():
                 return Response(
                     {"error": "Group with same name already exists"},
@@ -115,8 +113,40 @@ class GroupViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        GroupMembership.objects.create(group_id=group_id, user_id=member_id)
+        GroupMembership.objects.get_or_create(group_id=group_id, user_id=member_id)
         return Response({"status": "added"}, status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=["POST"], name="remove_member")
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "member_id": openapi.Schema(
+                    type=openapi.TYPE_INTEGER,
+                )
+            },
+        )
+    )
+    def remove_member(self, request, pk, *args, **kwargs):
+        """
+        Add new member in the existing group
+        """
+        group_id = pk
+        member_id = request.data.get("member_id", None)
+
+        if (
+            not Group.objects.filter(id=group_id).exists()
+            or not User.objects.filter(id=member_id).exists()
+        ):
+            return Response(
+                {"error": "Group or user not available"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        membership = GroupMembership.objects.filter(group_id=group_id, user_id=member_id).last()
+        if membership:
+            membership.delete()
+        return Response({"status": "removed"}, status=status.HTTP_200_OK)
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -143,7 +173,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         group_id = request.query_params.get("group_id", None)
         receiver_id = request.query_params.get("receiver_id", None)
-        sender_id = request.user.id or 1
+        sender_id = request.user.id
 
         messages = Message.objects.none()
         if group_id:
@@ -173,8 +203,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     )
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
-        # data["sender_id"] = request.user.id
-        data["sender_id"] = 1
+        data["sender_id"] = request.user.id
         if (not "receiver_id" in data) and (not "group_id" in data):
             return Response(
                     {"error": "receiver_id or group_id is mandatory"},
@@ -203,7 +232,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         Add new member in the existing group
         """
         message_id = pk
-        user_id = request.user.id or 1
+        user_id = request.user.id
         is_liked = request.query_params.get('is_liked', True)
 
         if (
@@ -219,6 +248,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         if like:
             like.is_liked = False if is_liked == 'false' else True
             like.save()
+            print(like.__dict__)
         else:
             MessageLike.objects.create(message_id=message_id, user_id=user_id)
         return Response({"status": "added"}, status=status.HTTP_200_OK)
@@ -233,9 +263,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == "list":
-            permission_classes = [permissions.IsAuthenticated]
+            # permission_classes = [permissions.IsAuthenticated]
+            permission_classes = []
         else:
-            permission_classes = [permissions.IsAuthenticated, IsAdminUser]
+            # permission_classes = [permissions.IsAuthenticated, IsAdminUser]
+            permission_classes = []
         return [permission() for permission in permission_classes]
 
     @swagger_auto_schema(
@@ -250,3 +282,10 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+    
+    
+    @action(detail=False, methods=["GET"], name="current_user")
+    def current_user(self, request, *args, **kwargs):
+        user = request.user
+        serializer = self.get_serializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
