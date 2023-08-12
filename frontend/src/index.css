@@ -154,7 +154,6 @@ code {
 
 .like-message {
   content: "";
-  background: url("./images/heart-3510.svg");
   background-position: center center;
   background-size: cover;
   opacity: 0.3;
