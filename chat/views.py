@@ -267,7 +267,7 @@ class UserViewSet(viewsets.ModelViewSet):
     filterset_class = UserFilterSet
 
     def get_permissions(self):
-        if self.action == "list":
+        if self.action in ["list", "current_user"]:
             permission_classes = [permissions.IsAuthenticated]
         else:
             permission_classes = [permissions.IsAuthenticated, IsAdminUser]
