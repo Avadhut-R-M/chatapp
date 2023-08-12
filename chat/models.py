@@ -41,9 +41,7 @@ class Message(TimeStamped):
         related_name="received_messages",
     )
     content = models.TextField()
-    likes = models.ManyToManyField(
-        User, related_name="messages", through="MessageLike"
-    )
+    likes = models.ManyToManyField(User, related_name="messages", through="MessageLike")
 
     def __str__(self) -> str:
         message_len = len(self.content)

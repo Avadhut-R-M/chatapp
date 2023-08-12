@@ -86,7 +86,7 @@ class TestUpdateMessage:
         )
 
         assert response.status_code == status.HTTP_200_OK
-    
+
     def test_if_data_is_valid_return_200(self):
         message = baker.make(Message)
         client = APIClient()

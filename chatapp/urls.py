@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path, re_path
+from django.views import generic
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from django.views import generic
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -46,7 +46,6 @@ urlpatterns = [
     ),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("api/", include("chat.urls")),
-    re_path(r'^$', generic.RedirectView.as_view(
-         url='/api/', permanent=False)),
+    re_path(r"^$", generic.RedirectView.as_view(url="/api/", permanent=False)),
     path("api/", include("authentication.urls")),
 ]

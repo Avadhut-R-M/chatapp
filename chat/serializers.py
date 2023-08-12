@@ -46,19 +46,30 @@ class MessageSerializer(serializers.ModelSerializer):
     group_id = serializers.IntegerField(write_only=True, required=False)
     sender_id = serializers.IntegerField(required=False)
     sender_name = serializers.SerializerMethodField()
-    time = serializers.DateTimeField(source='created' ,format='%d-%h %I:%M %p', read_only=True)
+    time = serializers.DateTimeField(
+        source="created", format="%d-%h %I:%M %p", read_only=True
+    )
     is_liked = serializers.SerializerMethodField()
 
     class Meta:
         model = Message
-        fields = ("id", "content", "receiver_id", "group_id", "sender_id", "sender_name", "time", "is_liked")
+        fields = (
+            "id",
+            "content",
+            "receiver_id",
+            "group_id",
+            "sender_id",
+            "sender_name",
+            "time",
+            "is_liked",
+        )
 
     def get_sender_name(self, obj):
-        return ' '.join([obj.sender.first_name, obj.sender.last_name])
-    
+        return " ".join([obj.sender.first_name, obj.sender.last_name])
+
     def get_is_liked(self, obj):
-        user_id = self.context.get('user_id', None)
-        if obj.messagelike_set.filter(user_id = user_id, is_liked=True).exists():
+        user_id = self.context.get("user_id", None)
+        if obj.messagelike_set.filter(user_id=user_id, is_liked=True).exists():
             return True
         return False
 
@@ -69,7 +80,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "first_name", "last_name", "email", "username", "password", "is_admin")
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "username",
+            "password",
+            "is_admin",
+        )
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -80,6 +99,6 @@ class UserSerializer(serializers.ModelSerializer):
             last_name=validated_data.get("last_name", ""),
         )
         return user
-    
+
     def get_is_admin(self, obj):
         return obj.is_staff
