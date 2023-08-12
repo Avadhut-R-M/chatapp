@@ -24,6 +24,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [django_filters.DjangoFilterBackend]
     filterset_class = GroupFilterSet
+    
 
     def get_serializer_class(self):
         if self.action == "retrieve" or self.action == "partial_update":
@@ -44,7 +45,9 @@ class GroupViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = request.user
         user = User.objects.first()
-        groups = user.chat_groups.all()
+        groups = Group.objects.none()
+        if user:
+            groups = user.chat_groups.all()
         groups = self.filter_queryset(groups)
         serialzers = self.get_serializer(groups, many=True)
         return Response(serialzers.data, status=status.HTTP_200_OK)
@@ -62,9 +65,11 @@ class GroupViewSet(viewsets.ModelViewSet):
         )
     )
     def create(self, request, *args, **kwargs):
-        members = request.data.get("members", "[]")
+        members = request.data.get("members", [])
         name = request.data.get("name", "")
 
+        if isinstance(members, str):
+            members = eval(members)
         if request.user:
             members.append(request.user.id)
 
@@ -263,11 +268,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == "list":
-            # permission_classes = [permissions.IsAuthenticated]
-            permission_classes = []
+            permission_classes = [permissions.IsAuthenticated]
         else:
-            # permission_classes = [permissions.IsAuthenticated, IsAdminUser]
-            permission_classes = []
+            permission_classes = [permissions.IsAuthenticated, IsAdminUser]
         return [permission() for permission in permission_classes]
 
     @swagger_auto_schema(

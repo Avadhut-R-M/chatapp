@@ -65,7 +65,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-    is_admin = serializers.CharField(read_only=True, source='is_staff')
+    is_admin = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -80,3 +80,6 @@ class UserSerializer(serializers.ModelSerializer):
             last_name=validated_data.get("last_name", ""),
         )
         return user
+    
+    def get_is_admin(self, obj):
+        return obj.is_staff

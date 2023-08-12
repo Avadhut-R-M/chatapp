@@ -7,7 +7,7 @@ from rest_framework.test import APIClient
 
 @pytest.mark.django_db
 class TestCreateUser:
-    def test_if_user_is_anonymus_return_403(self):
+    def test_if_user_is_anonymus_return_401(self):
         client = APIClient()
         response = client.post(
             "/api/user/",
@@ -19,7 +19,7 @@ class TestCreateUser:
             },
         )
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_if_user_is_not_admin_return_403(self):
         client = APIClient()
@@ -69,11 +69,11 @@ class TestCreateUser:
 
 @pytest.mark.django_db
 class TestListUser:
-    def test_if_user_is_anonymus_return_403(self):
+    def test_if_user_is_anonymus_return_401(self):
         client = APIClient()
         response = client.get("/api/user/")
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_if_data_is_valid_return_200(self):
         client = APIClient()
@@ -85,12 +85,12 @@ class TestListUser:
 
 @pytest.mark.django_db
 class TestDeleteUser:
-    def test_if_user_is_anonymus_return_403(self):
+    def test_if_user_is_anonymus_return_401(self):
         user = baker.make(User)
         client = APIClient()
         response = client.delete("/api/user/{}/".format(user.id))
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_if_user_not_admin_return_400(self):
         user = baker.make(User)
@@ -111,14 +111,14 @@ class TestDeleteUser:
 
 @pytest.mark.django_db
 class TestUpdateUser:
-    def test_if_user_is_anonymus_return_403(self):
+    def test_if_user_is_anonymus_return_401(self):
         user = baker.make(User)
         client = APIClient()
         response = client.patch(
             "/api/user/{}/".format(user.id), {"email": "user@test.com"}
         )
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_if_user_not_admin_return_403(self):
         user = baker.make(User)

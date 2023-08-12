@@ -9,11 +9,11 @@ from chat.models import Message
 
 @pytest.mark.django_db
 class TestCreateMessage:
-    def test_if_user_is_anonymus_return_403(self):
+    def test_if_user_is_anonymus_return_401(self):
         client = APIClient()
         response = client.post("/api/message/", {"group_id": "1", "content": "test"})
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_if_data_is_invalid_return_400(self):
         client = APIClient()
@@ -34,11 +34,11 @@ class TestCreateMessage:
 
 @pytest.mark.django_db
 class TestListMessage:
-    def test_if_user_is_anonymus_return_403(self):
+    def test_if_user_is_anonymus_return_401(self):
         client = APIClient()
         response = client.get("/api/message/")
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_if_data_is_valid_return_200(self):
         client = APIClient()
@@ -50,12 +50,12 @@ class TestListMessage:
 
 @pytest.mark.django_db
 class TestDeleteMessage:
-    def test_if_user_is_anonymus_return_403(self):
+    def test_if_user_is_anonymus_return_401(self):
         message = baker.make(Message)
         client = APIClient()
         response = client.delete("/api/message/{}/".format(message.id))
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_if_data_is_valid_return_204(self):
         message = baker.make(Message)
@@ -68,16 +68,26 @@ class TestDeleteMessage:
 
 @pytest.mark.django_db
 class TestUpdateMessage:
-    def test_if_user_is_anonymus_return_403(self):
+    def test_if_user_is_anonymus_return_401(self):
         message = baker.make(Message)
         client = APIClient()
         response = client.patch(
             "/api/message/{}/".format(message.id), {"content": "test2"}
         )
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_if_data_is_valid_return_204(self):
+    def test_if_data_is_invalid_return_400(self):
+        message = baker.make(Message)
+        client = APIClient()
+        client.force_authenticate(user=User(id=1))
+        response = client.patch(
+            "/api/message/{}/".format(message.id), {"value": "test"}
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+    
+    def test_if_data_is_valid_return_200(self):
         message = baker.make(Message)
         client = APIClient()
         client.force_authenticate(user=User(id=1))

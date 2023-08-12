@@ -4,10 +4,10 @@ const UPDATE_LIST = "UPDATE_LIST";
 const RESET_NEW_USER_MODAL = "RESET_NEW_USER_MODAL";
 const OPEN_NEW_USER_MODAL = "OPEN_NEW_USER_MODAL";
 const ADD_CURRENT_USER = "ADD_CURRENT_USER";
-const RESET_EDIT_USER_MODAL= "RESET_EDIT_USER_MODAL";
-const OPEN_EDIT_USER_MODAL="OPEN_EDIT_USER_MODAL"
-const LOGIN="LOGIN";
-const LOGOUT="LOGOUT"
+const RESET_EDIT_USER_MODAL = "RESET_EDIT_USER_MODAL";
+const OPEN_EDIT_USER_MODAL = "OPEN_EDIT_USER_MODAL";
+const LOGIN = "LOGIN";
+const LOGOUT = "LOGOUT";
 
 const initialData = {
   list: [],
@@ -15,7 +15,7 @@ const initialData = {
   current_user: {},
   edit_user_modal_open: false,
   edit_user_id: null,
-  is_logged_in: false
+  is_logged_in: false,
 };
 
 const UserReducer = (state = initialData, action) => {
@@ -41,16 +41,20 @@ const UserReducer = (state = initialData, action) => {
       return { ...state, edit_user_modal_open: false, edit_user_id: null };
 
     case OPEN_EDIT_USER_MODAL:
-      return { ...state, edit_user_modal_open: true, edit_user_id:action.payload };
+      return {
+        ...state,
+        edit_user_modal_open: true,
+        edit_user_id: action.payload,
+      };
 
     case ADD_CURRENT_USER:
       return { ...state, current_user: action.payload };
 
     case LOGIN:
-        return {...state, is_logged_in: true}
+      return { ...state, is_logged_in: true };
 
     case LOGOUT:
-        return {...state, is_logged_in: false}
+      return { ...state, is_logged_in: false };
 
     default:
       return state;
@@ -68,5 +72,5 @@ export {
   RESET_EDIT_USER_MODAL,
   OPEN_EDIT_USER_MODAL,
   LOGIN,
-  LOGOUT
+  LOGOUT,
 };

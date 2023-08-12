@@ -1,5 +1,4 @@
 import React from "react";
-import { useRef } from "react";
 import { connect } from "react-redux";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
@@ -11,16 +10,6 @@ import {
   open_member_addition,
   remove_group_member,
 } from "../../actions/group-actions";
-import {
-  send_messages,
-  like_messages,
-  reset_scroll,
-  delete_messages,
-  edit_messages,
-} from "../../actions/message-action";
-import { toast, ToastContainer } from "react-toastify";
-import EditMessage from "./EditMessage";
-import LikeImage from "./LikeImage";
 import DeleteMessage from "./DeleteMessage";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
@@ -56,8 +45,8 @@ class GroupInfo extends React.Component {
   };
 
   closeAddMember = () => {
-    this.setState({})
-  }
+    this.setState({});
+  };
 
   render() {
     let selected_group = this.props.selected_group_id
@@ -194,11 +183,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     get_groups: () => dispatch(get_groups()),
     set_selected_group: (id, name) => dispatch(set_selected_group(id, name)),
-    send_messages: (data) => dispatch(send_messages(data)),
-    like_messages: (id, is_liked) => dispatch(like_messages(id, is_liked)),
-    reset_scroll: () => dispatch(reset_scroll()),
-    delete_messages: (id) => dispatch(delete_messages(id)),
-    edit_messages: (id, data) => dispatch(edit_messages(id, data)),
     reset_page: () => dispatch(reset_page()),
     edit_group: (id, data) => dispatch(edit_group(id, data)),
     delete_group: (id) => dispatch(delete_group(id)),

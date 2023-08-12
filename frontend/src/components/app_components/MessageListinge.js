@@ -3,11 +3,7 @@ import { useRef } from "react";
 import { connect } from "react-redux";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {
-  get_groups,
-  set_selected_group,
-  get_group_info,
-} from "../../actions/group-actions";
+import { get_groups, get_group_info } from "../../actions/group-actions";
 import {
   send_messages,
   like_messages,
@@ -15,7 +11,6 @@ import {
   delete_messages,
   edit_messages,
 } from "../../actions/message-action";
-import { toast, ToastContainer } from "react-toastify";
 import EditMessage from "./EditMessage";
 import LikeImage from "./LikeImage";
 import DeleteMessage from "./DeleteMessage";
@@ -124,11 +119,10 @@ class MessageListing extends React.Component {
             <div className="message-listing-main-container">
               <div
                 className="message-listing-groupname"
-                onClick={() =>
-                  {this.props.get_group_info(this.props.selected_group_id)
-                    this.props.change_page('group-info')
-                }
-                }
+                onClick={() => {
+                  this.props.get_group_info(this.props.selected_group_id);
+                  this.props.change_page("group-info");
+                }}
               >
                 {this.props.selected_group_name}
               </div>
@@ -254,14 +248,13 @@ class MessageListing extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     get_groups: () => dispatch(get_groups()),
-    set_selected_group: (id, name) => dispatch(set_selected_group(id, name)),
     send_messages: (data) => dispatch(send_messages(data)),
     like_messages: (id, is_liked) => dispatch(like_messages(id, is_liked)),
     reset_scroll: () => dispatch(reset_scroll()),
     delete_messages: (id) => dispatch(delete_messages(id)),
     edit_messages: (id, data) => dispatch(edit_messages(id, data)),
     get_group_info: (id) => dispatch(get_group_info(id)),
-    change_page: (page) => dispatch(change_page(page))
+    change_page: (page) => dispatch(change_page(page)),
   };
 };
 

@@ -4,7 +4,6 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
-// import { logout } from "../../actions/auth-action";
 import { open_new_user_modal, logout } from "../../actions/user-action";
 import { open_new_group_modal } from "../../actions/group-actions";
 import { change_page, reset_page } from "../../actions/ui-action";
@@ -31,13 +30,13 @@ class Header extends React.Component {
                   New Group
                 </Link>
               </Nav.Link>
-              {this.props.is_admin && <Nav.Link>
+              {this.props.is_admin ? <Nav.Link>
                 <Link to="#" onClick={() => this.props.open_new_user_modal()}>
                   New User
                 </Link>
-              </Nav.Link>}
+              </Nav.Link>: ''}
               <Nav.Link>
-                <Link to="#" onClick={() => this.props.change_page('user_listing')}>
+                <Link to="users">
                   Users
                 </Link>
               </Nav.Link>

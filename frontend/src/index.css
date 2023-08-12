@@ -1,23 +1,23 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-.App{
+.App {
   background-color: #242c5b;
   /* height: 100vh; */
 }
 
-.group-listing{
+.group-listing {
   /* background-color: #0f1855; */
   border-bottom: 1px solid gray;
   padding-top: 10px;
@@ -28,30 +28,29 @@ code {
   color: white;
 }
 
-.group-listing-selected{
+.group-listing-selected {
   background-color: #40476a;
 }
 
-.group-listing-main{
+.group-listing-main {
   border-right: 1px solid gray;
   padding-right: 0px !important;
   height: 93vh;
   /* background-color: #242c5b; */
 }
 
-.group-listing-container{
+.group-listing-container {
   margin-left: 0px !important;
   margin-right: 0px !important;
   background-color: #242c5b;
 }
 
-
-.user-container{
+.user-container {
   height: 92vh;
   padding-top: 1em;
 }
 
-.message-input{
+.message-input {
   width: 100%;
   padding-top: 2px;
   border: none;
@@ -62,7 +61,7 @@ code {
   border-radius: 10px;
 }
 
-.message-listing-main{
+.message-listing-main {
   padding-left: 20px !important;
   display: flex;
   flex-direction: column;
@@ -71,7 +70,7 @@ code {
   /* max-height: 90vh; */
 }
 
-.group-info-main{
+.group-info-main {
   padding-left: 20px !important;
   display: flex;
   flex-direction: column;
@@ -80,16 +79,16 @@ code {
   /* max-height: 90vh; */
 }
 
-.message-listing{
+.message-listing {
   color: white;
   text-align: left;
 }
 
-.message-lising-content{
+.message-lising-content {
   padding-left: 20px;
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   background-color: #242c5b;
 }
 
@@ -97,7 +96,7 @@ code {
   background: #40476a;
 }
 
-.message-input-grp{
+.message-input-grp {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
@@ -105,12 +104,11 @@ code {
   column-gap: 10px;
 }
 
-.message-send{
+.message-send {
   height: 2em;
 }
 
-
-.message-listing-groupname{
+.message-listing-groupname {
   background-color: #40476a;
   color: white;
   border: 1px solid #40476a;
@@ -121,7 +119,7 @@ code {
   cursor: pointer;
 }
 
-.message-listing-messages{
+.message-listing-messages {
   overflow: scroll;
   max-height: 70vh;
 }
@@ -154,8 +152,8 @@ code {
   border-color: white;
 }
 
-.like-message{
-  content: '';
+.like-message {
+  content: "";
   background: url("./images/heart-3510.svg");
   background-position: center center;
   background-size: cover;
@@ -189,20 +187,20 @@ code {
   fill: red !important;
 }
 
-.group-search{
+.group-search {
   padding-right: 5px;
   padding-bottom: 15px;
   border-bottom: 5px solid white;
 }
 
-.message-edit-container{
+.message-edit-container {
   margin-bottom: 10px;
   display: flex;
   column-gap: 10px;
   font-size: 0.7em;
 }
 
-.group-members-title{
+.group-members-title {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -210,11 +208,11 @@ code {
   padding-bottom: 10px;
 }
 
-.group-members-title-span{
+.group-members-title-span {
   color: white;
 }
 
-.group-members{
+.group-members {
   display: flex;
   justify-content: space-between;
   color: white;
@@ -222,26 +220,26 @@ code {
   margin-bottom: 10px;
 }
 
-.group-members-main{
+.group-members-main {
   overflow: scroll;
   height: 50vh;
   margin-top: 10px;
 }
-.group-info-container{
+.group-info-container {
   display: flex;
   column-gap: 1em;
 }
 
-.message-listing-groupname{
+.message-listing-groupname {
   width: 100%;
 }
 
-.group-listing-all{
+.group-listing-all {
   overflow: scroll;
   height: 85vh;
 }
 
-.user-listing{
+.user-listing {
   display: flex;
   color: white;
   justify-content: space-between;
@@ -249,12 +247,12 @@ code {
   margin-bottom: 1em;
 }
 
-.user-listing-buttons{
+.user-listing-buttons {
   display: flex;
   column-gap: 2em;
 }
 
-.user-search{
+.user-search {
   margin-bottom: 1em;
 }
 

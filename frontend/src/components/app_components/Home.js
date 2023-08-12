@@ -22,7 +22,7 @@ class Home extends React.Component {
   componentDidMount() {
     this.props.get_groups();
     this.props.get_users();
-    this.props.get_current_user()
+    this.props.get_current_user();
   }
 
   onGroupSelection = (group) => {
@@ -84,7 +84,7 @@ const mapDispatchToProps = (dispatch) => {
     get_messages: (group_id) => dispatch(get_messages(group_id)),
     get_users: () => dispatch(get_users()),
     reset_page: () => dispatch(reset_page()),
-    get_current_user: () => dispatch(get_current_user())
+    get_current_user: () => dispatch(get_current_user()),
   };
 };
 

@@ -5,7 +5,6 @@ import { MessageReducer } from "../reducers/MessageReducer";
 import { UserReducer } from "../reducers/UserReducer";
 import { UiReducer } from "../reducers/UiReducer";
 import { set_log_out } from "../actions/user-action";
-import { toast } from "react-toastify";
 const rootReducer = {
   group: GroupReducer,
   message: MessageReducer,
@@ -64,7 +63,7 @@ const actionHandler = (store) => (next) => (action) => {
                   actionHandler(store)(next)(action);
                 });
               } else {
-                localStorage.clear()
+                localStorage.clear();
                 store.dispatch(set_log_out());
               }
             });

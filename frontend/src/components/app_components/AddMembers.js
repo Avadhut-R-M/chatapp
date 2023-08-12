@@ -1,13 +1,12 @@
-import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
 import Select from "react-select";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import React from "react";
 import { connect } from "react-redux";
-import { close_member_addition, add_group_member } from "../../actions/group-actions";
+import {
+  close_member_addition,
+  add_group_member,
+} from "../../actions/group-actions";
 
 class AddMembers extends React.Component {
   constructor(props) {
@@ -19,12 +18,14 @@ class AddMembers extends React.Component {
 
   getUserOptions = () => {
     let members_ids = this.props?.members?.map(({ id }) => id) || [];
-    let remaining_users = this.props.users.filter(user => !members_ids.includes(user.id))
+    let remaining_users = this.props.users.filter(
+      (user) => !members_ids.includes(user.id)
+    );
     let userOptions = remaining_users.map((user) => {
-        return {
-          label: user.first_name + " " + user.last_name,
-          value: user.id,
-        };
+      return {
+        label: user.first_name + " " + user.last_name,
+        value: user.id,
+      };
     });
     return userOptions;
   };
@@ -50,15 +51,14 @@ class AddMembers extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button
-              onClick={() =>
-                {this.props.add_group_member(this.props.group_id, {
+              onClick={() => {
+                this.props.add_group_member(this.props.group_id, {
                   member_id: this.state.selected_users?.value,
                 });
-            this.props.close_member_addition()}
-              }
+                this.props.close_member_addition();
+              }}
               variant="primary"
-              disabled={
-                this.state?.selected_users?.length < 1}
+              disabled={this.state?.selected_users?.length < 1}
             >
               Add Member
             </Button>

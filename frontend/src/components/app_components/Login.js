@@ -1,23 +1,22 @@
-
-import React, { useState } from "react"
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { login } from "../../actions/user-action";
 
-class Login extends React.Component{
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      passward: '',
-      username: ''
-    }
+      passward: "",
+      username: "",
+    };
   }
 
   clickToLogin = (e) => {
-    e.preventDefault()
-    this.props.login(this.state.username, this.state.passward)
-  }
+    e.preventDefault();
+    this.props.login(this.state.username, this.state.passward);
+  };
 
-  render(){
+  render() {
     return (
       <div className="Auth-form-container">
         <form className="Auth-form">
@@ -29,7 +28,7 @@ class Login extends React.Component{
                 type="text"
                 className="form-control mt-1"
                 placeholder="Enter Username"
-                onChange={(e) => this.setState({'username':e.target.value})}
+                onChange={(e) => this.setState({ username: e.target.value })}
               />
             </div>
             <div className="form-group mt-3">
@@ -38,36 +37,36 @@ class Login extends React.Component{
                 type="password"
                 className="form-control mt-1"
                 placeholder="Enter password"
-                onChange={(e) => this.setState({'passward':e.target.value})}
+                onChange={(e) => this.setState({ passward: e.target.value })}
               />
             </div>
             <div className="d-grid gap-2 mt-3">
-              <button type="submit"
-            //   disabled={this.state}
-            onClick={this.clickToLogin}
-               className="btn btn-primary">
+              <button
+                type="submit"
+                //   disabled={this.state}
+                onClick={this.clickToLogin}
+                className="btn btn-primary"
+              >
                 Submit
               </button>
             </div>
           </div>
         </form>
       </div>
-    )
+    );
   }
-
 }
 
-
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     login: (username, passward) => dispatch(login(username, passward)),
-  }
-}
+  };
+};
 
-const mapStateToProps = state => {
-  return{
-      is_loggedin: state.user.is_logged_in
-  }
-}
+const mapStateToProps = (state) => {
+  return {
+    is_loggedin: state.user.is_logged_in,
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -1,8 +1,7 @@
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 function DeleteMessage(props) {
-
   return (
     <>
       <Modal show={props.show} onHide={props.onHide}>
