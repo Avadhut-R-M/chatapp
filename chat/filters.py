@@ -25,7 +25,6 @@ class UserFilterSet(django_filters.FilterSet):
         ]
 
     def filter_name(self, queryset, name, value):
-        print(name,  value, "filter")
         for term in value.split(" "):
             queryset = queryset.filter(
                 Q(first_name__icontains=term) | Q(last_name__icontains=term)

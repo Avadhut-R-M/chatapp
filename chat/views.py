@@ -253,7 +253,6 @@ class MessageViewSet(viewsets.ModelViewSet):
         if like:
             like.is_liked = False if is_liked == 'false' else True
             like.save()
-            print(like.__dict__)
         else:
             MessageLike.objects.create(message_id=message_id, user_id=user_id)
         return Response({"status": "added"}, status=status.HTTP_200_OK)
