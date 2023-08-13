@@ -39,8 +39,6 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        <NewUser />
-        <NewGroup />
         <Container className="group-listing-container">
           <Row>
             <Col className="group-listing-main">

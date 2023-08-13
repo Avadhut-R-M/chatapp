@@ -15,6 +15,7 @@ import EditMessage from "./EditMessage";
 import LikeImage from "./LikeImage";
 import DeleteMessage from "./DeleteMessage";
 import { change_page } from "../../actions/ui-action";
+import Message from "./Message";
 
 class MessageListing extends React.Component {
   constructor(props) {
@@ -136,84 +137,22 @@ class MessageListing extends React.Component {
                         <div className="date-container blue">
                           <div className="circle"> {date} </div>
                         </div>
-                        <div
-                          className={`message-listing ${""}`}
-                          key={message.id}
-                        >
-                          <div className="message-lising-sender">
-                            <span>{message.sender_name} </span>
-                            <span
-                              style={{
-                                fontSize: "0.8em",
-                              }}
-                            >
-                              ({message?.time?.split(" ")[1]}{" "}
-                              {message?.time?.split(" ")[2]})
-                            </span>
-                            <span> - </span>
-                          </div>
-                          <div className="message-lising-content">
-                            {message.content}
-                          </div>
-                          <div className="message-edit-container">
-                            <div
-                              onClick={() => this.handleLike(message)}
-                              className="message-like"
-                            >
-                              <LikeImage is_liked={message?.is_liked} />
-                            </div>
-                            <a
-                              href="#"
-                              onClick={(e) => this.onEdit(e, message)}
-                            >
-                              Edit
-                            </a>
-                            <a
-                              href="#"
-                              onClick={(e) => this.onDelete(e, message.id)}
-                            >
-                              Delete
-                            </a>
-                          </div>
-                        </div>
+                        <Message
+                          message={message}
+                          handleLike={this.handleLike}
+                          onEdit={this.onEdit}
+                          onDelete={this.onDelete}
+                        />
                       </div>
                     );
                   }
                   return (
-                    <div className={`message-listing ${""}`} key={message.id}>
-                      <div className="message-lising-sender">
-                        <span>{message.sender_name} </span>
-                        <span
-                          style={{
-                            fontSize: "0.8em",
-                          }}
-                        >
-                          ({message?.time?.split(" ")[1]}{" "}
-                          {message?.time?.split(" ")[2]})
-                        </span>
-                        <span> - </span>
-                      </div>
-                      <div className="message-lising-content">
-                        {message.content}
-                      </div>
-                      <div className="message-edit-container">
-                        <div
-                          onClick={() => this.handleLike(message)}
-                          className="message-like"
-                        >
-                          <LikeImage is_liked={message?.is_liked} />
-                        </div>
-                        <a href="#" onClick={(e) => this.onEdit(e, message)}>
-                          Edit
-                        </a>
-                        <a
-                          href="#"
-                          onClick={(e) => this.onDelete(e, message.id)}
-                        >
-                          Delete
-                        </a>
-                      </div>
-                    </div>
+                    <Message
+                        message={message}
+                        handleLike={this.handleLike}
+                        onEdit={this.onEdit}
+                        onDelete={this.onDelete}
+                    />
                   );
                 })}
                 <div ref={this.state.bottomRef} />
