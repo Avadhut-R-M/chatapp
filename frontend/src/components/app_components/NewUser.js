@@ -120,6 +120,13 @@ class NewUser extends React.Component {
                 onClick={(e) => {
                   e.preventDefault();
                   this.props.create_user(this.state);
+                  this.setState({
+                    first_name: "",
+                    last_name: "",
+                    email: "",
+                    password: "",
+                    username: "",
+                  });
                 }}
               >
                 Submit form

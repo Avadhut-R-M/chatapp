@@ -10,7 +10,7 @@ import {
   LOGOUT,
   LOGIN,
 } from "../reducers/UserReducer";
-import { user_api } from "./api-endpoint";
+import { user_api, auth_api } from "./api-endpoint";
 
 export const create_user = (data) => {
   return (dispatch, getState) => {
@@ -226,7 +226,7 @@ export const login = (username, password) => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/auth/token`;
+    let url = `${auth_api}/token`;
 
     dispatch({
       type: "API",
@@ -259,7 +259,7 @@ export const logout = () => {
       body: JSON.stringify(data),
     };
 
-    let url = `http://127.0.0.1:8000/api/auth/logout/`;
+    let url = `${auth_api}/logout/`;
 
     dispatch({
       type: "API",

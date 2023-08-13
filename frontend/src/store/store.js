@@ -5,6 +5,8 @@ import { MessageReducer } from "../reducers/MessageReducer";
 import { UserReducer } from "../reducers/UserReducer";
 import { UiReducer } from "../reducers/UiReducer";
 import { set_log_out } from "../actions/user-action";
+import { auth_api } from "../actions/api-endpoint";
+
 const rootReducer = {
   group: GroupReducer,
   message: MessageReducer,
@@ -51,7 +53,7 @@ const actionHandler = (store) => (next) => (action) => {
               body: JSON.stringify(refresh_data),
             };
             fetch(
-              "http://127.0.0.1:8000/api/auth/refresh_token",
+              `${auth_api}/refresh_token`,
               refresh_options
             ).then((resp) => {
               if (resp.ok) {

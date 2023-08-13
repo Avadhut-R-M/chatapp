@@ -21,8 +21,9 @@ class NewGroup extends React.Component {
   }
 
   getUserOptions = () => {
-    let userOptions = this.props.users.map((user) => {
-      return {
+    let users = this.props.users.filter(user => user.id != this.props?.current_user?.id)
+    let userOptions = users.map((user) => {
+        return {
         label: user.first_name + " " + user.last_name,
         value: user.id,
       };
@@ -68,7 +69,7 @@ class NewGroup extends React.Component {
               onChange={(opt) => {
                 let options = [];
                 options = opt.map((o) => {
-                  return o.id;
+                  return o.value;
                 });
                 this.setState({ selected_users: options });
               }}
@@ -108,6 +109,7 @@ const mapStateToProps = (state) => {
   return {
     create_new_group: state.group.create_new_group,
     users: state.user.list,
+    current_user: state.user.current_user
   };
 };
 
