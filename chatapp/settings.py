@@ -27,7 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&9q)+w@87sn41=%%penieh&6e@)(ivo=kk-c8k!)vxz4(bx+f^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG', default=False
+)
 
 # Application definition
 
@@ -124,10 +125,6 @@ import os
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'frontend', "build", "static"),  # update the STATICFILES_DIRS
-)
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
@@ -181,4 +178,4 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=20),
 }
 
-ALLOWED_HOSTS = os.environ.get('SERVERNAMES','').split(' ')
+ALLOWED_HOSTS = env.list('SERVERNAMES', default=[])
