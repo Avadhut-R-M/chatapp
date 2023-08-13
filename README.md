@@ -1,7 +1,3 @@
-# chatapp
-admin-admin
-test-1234
-test1-1234
 
 ## Create DB for the project
 1. Install MySQL.
@@ -57,7 +53,7 @@ test1-1234
 
 
 ## API Documentation
-To aceess api documentation with swagger go to link 
+To access API documentation with swagger go to link 
 [http://127.0.0.1:8000/swagger](http://127.0.0.1:8000/swagger)
 
 Error Codes
@@ -69,7 +65,18 @@ The API may return the following error codes:
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
 
-## Hosted Projecct
-This project is hosted on AWS you can access it with
-frontend - [frontend](http://ava-chat-frontend.s3-website-us-east-1.amazonaws.com/)
+## Hosted Project
+This project is hosted on AWS you can access it with </br>
+frontend - [frontend](http://ava-chat-frontend.s3-website-us-east-1.amazonaws.com/) </br>
 backend - [backend](http://44.204.86.160/)
+</br>
+#### Login creads - 
+- admin user
+  - username - admin
+  - password - admin
+- normal user
+  - username - test
+  - password - 1234
+- normal user
+  - username - test1
+  - password - 1234
